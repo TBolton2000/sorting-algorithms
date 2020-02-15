@@ -13,10 +13,10 @@ let i;
 let j;
 let minIndex = i;
 let showArrows = false;
-let speed = 1;
+let speed = 100;
 let scale = 100/N;
 let speedSlider;
-
+let interupter = false;
 
 function setup() {
     createCanvas(800, 400);
@@ -27,11 +27,11 @@ function setup() {
 
     generateRandom();
     button1 = createButton(algoNames[algoIndex]);
-    button1.position(650,100)
+    button1.position(650,100);
     button1.mousePressed(toggleAlgorithm);
 
     button2 = createButton("Step");
-    button2.position(650,150)
+    button2.position(650,150);
     button2.mousePressed(stepSelectionSort);
 
     button3 = createButton("Run");
@@ -42,16 +42,18 @@ function setup() {
     button4.position(650,250);
     button4.mousePressed(generateRandom);
 
-    // button4 = createButton("Update");
-    // button4.position(340,375);
-    // button4.mousePressed(generateN);
+    button4 = createButton("Stop");
+    button4.position(340,375);
+    button4.mousePressed(playSynth);
 
     input = createInput("100");
     input.position(160,375);
     input.input(inputFunc);
 
-    speedSlider = createSlider(0,100,50,1);
-  speedSlider.position(10,375);
+    speedSlider = createSlider(1,100,50,1);
+    speedSlider.position(10,375);
+
+    polySynth = new p5.PolySynth();
 }
 
 function draw() {
@@ -60,8 +62,9 @@ function draw() {
     speed = speedSlider.value();
     text("Speed: "+speed,45,365);
     if(showArrows) {
-        drawMyArrow(j,0);
-        drawMyArrow(minIndex,color(255,0,0));
+        // drawMyArrow(j,0);
+        // drawMyArrow(minIndex,color(255,0,0));
+        drawAuxillary([j,minIndex]);
     }
 }
 
@@ -88,8 +91,15 @@ function drawNumbers() {
     }
 }
 
+function drawAuxillary(arrows){
+    colors = [color(0,0,255),color(51,153,255),color(0,204,255),color(0,51,153),color(0,0,102)]
+    for(let k = 0; k < arrows.length; k++) {
+        drawMyArrow(arrows[k],colors[k%colors.length]);
+    }
+}
+
 function drawMyArrow(index, color) {
-  drawArrow(createVector(index*6*scale+12,height*5/6), createVector(0,5-height/6), color);
+  drawArrow(createVector(index*6*scale+10+2*scale,height*5/6), createVector(0,5-height/6), color);
 }
 
 function drawArrow(base, vec, myColor) {
@@ -148,4 +158,8 @@ function generateN() {
     i = 0;
     j = 0;
     minIndex = 0;
+}
+
+function stopAll(){
+    interupter = true;
 }
